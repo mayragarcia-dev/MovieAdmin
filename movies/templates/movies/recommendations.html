@@ -1,0 +1,57 @@
+{% extends "movies/base.html" %}
+{% block title %}Recomendaciones - CineAdmin{% endblock %}
+{% block content %}
+{% if selected_genre %}
+<h2 style="color: #e94560; margin-bottom: 20px;">
+    Recomendaciones: <span style="color: #eee;">{{ selected_genre.name }}</span>
+</h2>
+{% else %}
+<h2 style="color: #e94560; margin-bottom: 20px;">Mejores Películas Valoradas</h2>
+{% endif %}
+
+<div class="filters">
+    <h3>Filtrar por género:</h3>
+    <a href="{% url 'recommendations' %}" class="{% if not selected_genre %}active{% endif %}">Todos</a>
+    {% for g in genres %}
+    <a href="{% url 'recommendations' g.name %}" class="{% if selected_genre and selected_genre.name == g.name %}active{% endif %}">{{ g.name }}</a>
+    {% endfor %}
+</div>
+
+{% if movies %}
+<table>
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Título</th>
+            <th>Géneros</th>
+            <th>Año</th>
+            <th>Valoración Media</th>
+            <th>Mejor Nota</th>
+            <th>Valoraciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in movies %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td><strong>{{ item.movie.title }}</strong></td>
+            <td>
+                {% for g in item.movie.genres.all %}
+                <span class="genre-tag">{{ g.name }}</span>
+                {% endfor %}
+            </td>
+            <td>{{ item.movie.release_date|date:"Y" }}</td>
+            <td class="stars">{% for i in "**********"|make_list %}{% if forloop.counter <= item.avg_rating %}&#9733;{% else %}&#9734;{% endif %}{% endfor %} {{ item.avg_rating }}/10</td>
+            <td><strong style="color: #e94560;">{{ item.max_rating }}/10</strong></td>
+            <td>{{ item.num_ratings }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="no-data">
+    <h3>No hay películas disponibles</h3>
+    <p>Aún no se han registrado películas con valoraciones.</p>
+</div>
+{% endif %}
+{% endblock %}

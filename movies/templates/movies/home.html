@@ -1,0 +1,9 @@
+{% extends "movies/base.html" %}
+{% block title %}Inicio - CineAdmin{% endblock %}
+{% block content %}
+<div class="home-box">
+    <h1>Bienvenido a CineAdmin</h1>
+    <p>Panel de administración y recomendaciones de películas.</p>
+    <a href="{% url 'recommendations' %}">Ver recomendaciones</a>
+</div>
+{% endblock %}

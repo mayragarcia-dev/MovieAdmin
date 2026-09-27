@@ -44,6 +44,23 @@ def movie_recommendations(request, genre_slug=None):
     return render(request, 'movies/recommendations.html', context)
 
 
+def movie_detail(request, pk):
+    """Vista de detalle de pelícual."""
+    movie = get_object_or_404(Movie, pk=pk)
+    ratings = movie.ratings.all()
+    if ratings:
+        avg_rating = round(sum(r.rating for r in ratings) / len(ratings), 1)
+        num_ratings = ratings.count()
+    else:
+        avg_rating = 0
+        num_ratings = 0
+    return render(request, 'movies/movie_detail.json', {
+        'movie': movie,
+        'avg_rating': avg_rating,
+        'num_ratings': num_ratings,
+    })
+
+
 def home(request):
     """Vista de inicio que redirige a recomendaciones."""
     return render(request, 'movies/home.html')

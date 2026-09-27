@@ -3,10 +3,6 @@ from .models import Movie, Genre
 
 
 def movie_recommendations(request, genre_slug=None):
-    """
-    Vista pública de recomendación:
-    Muestra las mejores películas valoradas, filtradas por género si se proporciona.
-    """
     movies = Movie.objects.prefetch_related('genres', 'ratings').all()
 
     genre = None
@@ -14,7 +10,6 @@ def movie_recommendations(request, genre_slug=None):
         genre = get_object_or_404(Genre, name__iexact=genre_slug)
         movies = movies.filter(genres=genre)
 
-    # Calculate average rating per movie
     movies_with_avg = []
     for movie in movies:
         ratings = movie.ratings.all()
@@ -26,14 +21,12 @@ def movie_recommendations(request, genre_slug=None):
             max_rating = 0
         movies_with_avg.append({
             'movie': movie,
-            'avg_rating': round(avg_rating, 1),
+            'avg_rating_num': '{:.1f}'.format(round(avg_rating, 1)),
             'max_rating': max_rating,
             'num_ratings': ratings.count(),
         })
 
-    # Sort by average rating descending
-    movies_with_avg.sort(key=lambda x: x['avg_rating'], reverse=True)
-
+    movies_with_avg.sort(key=lambda x: float(x['avg_rating_num']), reverse=True)
     all_genres = Genre.objects.prefetch_related('movies').all()
 
     context = {
@@ -44,23 +37,5 @@ def movie_recommendations(request, genre_slug=None):
     return render(request, 'movies/recommendations.html', context)
 
 
-def movie_detail(request, pk):
-    """Vista de detalle de pelícual."""
-    movie = get_object_or_404(Movie, pk=pk)
-    ratings = movie.ratings.all()
-    if ratings:
-        avg_rating = round(sum(r.rating for r in ratings) / len(ratings), 1)
-        num_ratings = ratings.count()
-    else:
-        avg_rating = 0
-        num_ratings = 0
-    return render(request, 'movies/movie_detail.json', {
-        'movie': movie,
-        'avg_rating': avg_rating,
-        'num_ratings': num_ratings,
-    })
-
-
 def home(request):
-    """Vista de inicio que redirige a recomendaciones."""
     return render(request, 'movies/home.html')

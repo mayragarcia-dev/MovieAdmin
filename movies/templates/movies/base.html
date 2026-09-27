@@ -7,422 +7,47 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f4f8; color: #2d3748; }
-        header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3); }
-        header h1 { color: #fff; font-size: 1.6em; letter-spacing: 1px; }
-        nav a { color: rgba(255,255,255,0.85); text-decoration: none; margin-left: 10px; padding: 8px 18px; border-radius: 25px; transition: all 0.3s ease; font-size: 0.95em; }
-        nav a:hover, nav a.active { background: rgba(255,255,255,0.2); color: #fff; }
+        header { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+        header h1 { color: #fff; font-size: 1.8em; letter-spacing: 2px; }
+        header h1 span { color: #e94560; }
+        nav a { color: rgba(255,255,255,0.85); text-decoration: none; margin-left: 10px; padding: 8px 20px; border-radius: 25px; transition: all 0.3s ease; font-size: 0.95em; }
+        nav a:hover, nav a.active { background: rgba(233, 69, 96, 0.3); color: #fff; }
         main { padding: 30px 40px; max-width: 1200px; margin: 0 auto; }
-        h2 { color: #4a5568; margin-bottom: 20px; font-weight: 600; }
+        h2 { color: #1a1a2e; margin-bottom: 20px; font-weight: 700; font-size: 1.4em; }
         .filters { margin-bottom: 30px; background: #fff; padding: 20px 25px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .filters h3 { color: #667eea; margin-bottom: 12px; font-size: 1em; text-transform: uppercase; letter-spacing: 0.5px; }
-        .filters a { display: inline-block; margin: 4px 6px 4px 0; padding: 6px 16px; background: #edf2f7; border: 1px solid #e2e8f0; color: #4a5568; text-decoration: none; border-radius: 20px; transition: all 0.3s ease; font-size: 0.9em; }
-        .filters a:hover, .filters a.active { background: #667eea; border-color: #667eea; color: #fff; }
+        .filters h3 { color: #0f3460; margin-bottom: 12px; font-size: 1em; text-transform: uppercase; letter-spacing: 0.5px; }
+        .filters a { display: inline-block; margin: 4px 6px 4px 0; padding: 6px 18px; background: #edf2f7; border: 1px solid #e2e8f0; color: #4a5568; text-decoration: none; border-radius: 20px; transition: all 0.3s ease; font-size: 0.9em; }
+        .filters a:hover, .filters a.active { background: #0f3460; border-color: #0f3460; color: #fff; }
         table { width: 100%; border-collapse: separate; border-spacing: 0; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.06); }
         th, td { padding: 14px 18px; text-align: left; border-bottom: 1px solid #edf2f7; }
-        th { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #fff; font-weight: 500; font-size: 0.9em; text-transform: uppercase; letter-spacing: 0.5px; }
+        th { background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%); color: #fff; font-weight: 600; font-size: 0.9em; text-transform: uppercase; letter-spacing: 0.5px; }
         tr:hover { background: #f7fafc; }
         tr:last-child td { border-bottom: none; }
         .stars { color: #f6ad55; font-size: 1.1em; letter-spacing: 2px; }
-        .genre-tag { display: inline-block; background: linear-gradient(135deg, #667eea22, #764ba222); border: 1px solid #667eea44; padding: 3px 12px; border-radius: 15px; font-size: 0.82em; color: #667eea; margin: 2px; }
+        .genre-tag { display: inline-block; background: linear-gradient(135deg, #0f346022, #1a1a2e22); border: 1px solid #0f346044; padding: 3px 12px; border-radius: 15px; font-size: 0.82em; color: #0f3460; margin: 2px; }
         .no-data { text-align: center; padding: 60px 20px; background: #fff; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
         .no-data h3 { color: #a0aec0; margin-bottom: 10px; }
         .no-data p { color: #cbd5e0; }
         .home-box { max-width: 550px; margin: 100px auto; text-align: center; background: #fff; padding: 60px 40px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
-        .home-box h1 { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 15px; font-size: 2em; }
+        .home-box h1 { background: linear-gradient(135deg, #0f3460 0%, #1a1a2e 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 15px; font-size: 2em; }
         .home-box p { color: #718096; margin-bottom: 30px; font-size: 1.1em; }
-        .home-box a { display: inline-block; padding: 14px 35px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #fff; text-decoration: none; border-radius: 25px; font-size: 1.05em; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.35); }
-        .home-box a:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(102, 126, 234, 0.45); }
+        .home-box a { display: inline-block; padding: 14px 35px; background: linear-gradient(135deg, #0f3460 0%, #1a1a2e 100%); color: #fff; text-decoration: none; border-radius: 25px; font-size: 1.05em; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(15, 52, 96, 0.35); }
+        .home-box a:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(15, 52, 96, 0.45); }
         .movie-title { font-weight: 600; color: #2d3748; }
-        .avg-col { font-weight: 600; color: #667eea; }
-        .max-col { font-weight: 700; color: #f6ad55; }
-
-        /* ====== DARK MODE TOGGLE BUTTON ====== */
-        #darkModeToggle {
-            background: rgba(255,255,255,0.2);
-            border: 2px solid rgba(255,255,255,0.4);
-            color: #fff;
-            padding: 6px 16px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 0.9em;
-            transition: all 0.3s ease;
-            margin-left: 10px;
-        }
-        #darkModeToggle:hover {
-            background: rgba(255,255,255,0.35);
-            border-color: rgba(255,255,255,0.7);
-        }
-        .header-right {
-            display: flex;
-            align-items: center;
-        }
-
-        /* ====== DARK MODE STYLES ====== */
-        body.dark-mode {
-            background: #1a202c;
-            color: #e2e8f0;
-        }
-        body.dark-mode header {
-            background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-        }
-        body.dark-mode nav a {
-            color: rgba(255,255,255,0.7);
-        }
-        body.dark-mode nav a:hover, body.dark-mode nav a.active {
-            background: rgba(255,255,255,0.15);
-            color: #fff;
-        }
-        body.dark-mode h2 {
-            color: #e2e8f0;
-        }
-        body.dark-mode .filters {
-            background: #2d3748;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-        }
-        body.dark-mode .filters h3 {
-            color: #a0aec0;
-        }
-        body.dark-mode .filters a {
-            background: #4a5568;
-            border-color: #555;
-            color: #cbd5e0;
-        }
-        body.dark-mode .filters a:hover, body.dark-mode .filters a.active {
-            background: #667eea;
-            border-color: #667eea;
-            color: #fff;
-        }
-        body.dark-mode table {
-            background: #2d3748;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-        }
-        body.dark-mode th, body.dark-mode td {
-            border-bottom-color: #4a5568;
-        }
-        body.dark-mode th {
-            background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
-        }
-        body.dark-mode tr:hover {
-            background: #3a4556;
-        }
-        body.dark-mode .no-data {
-            background: #2d3748;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-        }
-        body.dark-mode .no-data h3 {
-            color: #718096;
-        }
-        body.dark-mode .no-data p {
-            color: #a0aec0;
-        }
-        body.dark-mode .home-box {
-            background: #2d3748;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-        }
-        body.dark-mode .home-box p {
-            color: #a0aec0;
-        }
-        body.dark-mode .movie-title {
-            color: #e2e8f0;
-        }
-        body.dark-mode .genre-tag {
-            background: linear-gradient(135deg, #667eea33, #764ba233);
-            border-color: #667eea66;
-            color: #a0aec0;
-        }
-        body.dark-mode .avg-col {
-            color: #a0aec0;
-        }
-
-        /* ====== CARD GRID ====== */
-        .movies-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 20px;
-        }
-
-        /* ====== MOVIE CARD ====== */
-        .movie-card {
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border-radius: 12px;
-            background: #fff;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
-            overflow: hidden;
-            position: relative;
-        }
-        body.dark-mode .movie-card {
-            background: #2d3748;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-        }
-        .movie-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.25);
-        }
-
-        /* ====== POSTER PLACEHOLDER ====== */
-        .poster-placeholder {
-            width: 100%;
-            height: 300px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 4em;
-            color: rgba(255,255,255,0.8);
-        }
-
-        /* ====== CARD TEXT ====== */
-        .card-title {
-            font-weight: 600;
-            color: #2d3748;
-            padding: 12px 15px 4px;
-            font-size: 1.05em;
-        }
-        body.dark-mode .card-title {
-            color: #e2e8f0;
-        }
-        .card-year {
-            color: #718096;
-            padding: 0 15px 8px;
-            font-size: 0.9em;
-        }
-        body.dark-mode .card-year {
-            color: #a0aec0;
-        }
-        .card-genres {
-            padding: 0 15px 8px;
-            font-size: 0.85em;
-        }
-        .card-rating {
-            color: #f6ad55;
-            padding: 0 15px 12px;
-            font-size: 1em;
-        }
-
-        /* ====== MINI FICHA (on hover) ====== */
-        .mini-ficha {
-            display: none;
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: rgba(45, 55, 72, 0.95);
-            color: #e2e8f0;
-            padding: 15px;
-            font-size: 0.85em;
-            border-radius: 0 0 12px 12px;
-            z-index: 10;
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease, padding 0.3s ease;
-        }
-        .movie-card:hover .mini-ficha {
-            display: block;
-            max-height: 300px;
-            padding: 15px;
-        }
-
-        /* ====== MODAL CSS ====== */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.6);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-        .modal-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-        .modal-content {
-            background: #fff;
-            border-radius: 16px;
-            max-width: 800px;
-            width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
-            position: relative;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            transform: translateY(20px);
-            transition: transform 0.3s ease;
-        }
-        body.dark-mode .modal-content {
-            background: #2d3748;
-            color: #e2e8f0;
-        }
-        .modal-overlay.active .modal-content {
-            transform: translateY(0);
-        }
-        .modal-close {
-            position: absolute;
-            top: 15px;
-            right: 20px;
-            font-size: 1.8em;
-            cursor: pointer;
-            color: #a0aec0;
-            background: none;
-            border: none;
-            z-index: 10;
-            transition: color 0.3s ease;
-        }
-        .modal-close:hover {
-            color: #e53e3e;
-        }
-        .modal-poster {
-            width: 100%;
-            height: 400px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 16px 16px 0 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 5em;
-            color: rgba(255,255,255,0.8);
-        }
-        .modal-title {
-            font-size: 1.8em;
-            font-weight: 700;
-            color: #2d3748;
-            padding: 20px 25px 10px;
-        }
-        body.dark-mode .modal-title {
-            color: #e2e8f0;
-        }
-        .modal-description {
-            color: #4a5568;
-            padding: 0 25px 20px;
-            line-height: 1.6;
-            font-size: 1em;
-        }
-        body.dark-mode .modal-description {
-            color: #a0aec0;
-        }
-        .modal-genres {
-            padding: 0 25px 15px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-        .modal-rating {
-            padding: 0 25px 20px;
-            color: #f6ad55;
-            font-size: 1.2em;
-            font-weight: 600;
-        }
-        .modal-ratings-list {
-            padding: 0 25px 25px;
-        }
-        .modal-ratings-list li {
-            list-style: none;
-            padding: 6px 0;
-            color: #4a5568;
-            border-bottom: 1px solid #edf2f7;
-        }
-        body.dark-mode .modal-ratings-list li {
-            color: #a0aec0;
-            border-bottom-color: #4a5568;
-        }
-
-        /* ====== BUTTON STYLES ====== */
-        .btn-dark {
-            display: inline-block;
-            padding: 10px 24px;
-            background: #2d3748;
-            color: #e2e8f0;
-            border: 2px solid #4a5568;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 0.95em;
-            transition: all 0.3s ease;
-            text-decoration: none;
-        }
-        .btn-dark:hover {
-            background: #4a5568;
-            border-color: #667eea;
-        }
-        .btn-light {
-            display: inline-block;
-            padding: 10px 24px;
-            background: #f0f4f8;
-            color: #2d3748;
-            border: 2px solid #cbd5e0;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 0.95em;
-            transition: all 0.3s ease;
-            text-decoration: none;
-        }
-        .btn-light:hover {
-            background: #edf2f7;
-            border-color: #667eea;
-            color: #667eea;
-        }
-        body.dark-mode .btn-light {
-            background: #4a5568;
-            color: #e2e8f0;
-            border-color: #555;
-        }
-        body.dark-mode .btn-light:hover {
-            background: #667eea;
-            color: #fff;
-            border-color: #667eea;
-        }
+        .avg-col { font-weight: 600; color: #0f3460; }
+        .max-col { font-weight: 700; color: #e94560; }
     </style>
 </head>
 <body>
     <header>
-        <h1>&#127916; CineAdmin</h1>
-        <div class="header-right">
-            <nav>
-                <a href="{% url 'home' %}">Inicio</a>
-                <a href="{% url 'recommendations' %}">Recomendaciones</a>
-            </nav>
-            <button id="darkModeToggle" title="Toggle Dark Mode" onclick="toggleTheme()">&#127769;</button>
-        </div>
+        <h1>&#127916; Cine<span>Admin</span></h1>
+        <nav>
+            <a href="{% url 'home' %}">Inicio</a>
+            <a href="{% url 'recommendations' %}">Recomendaciones</a>
+        </nav>
     </header>
     <main>
         {% block content %}{% endblock %}
     </main>
-    <script>
-        var movieData = {};
-        function toggleTheme() {
-            document.body.classList.toggle('dark-mode');
-        }
-        function closeModal() {
-            document.getElementById('modalOverlay').classList.remove('active');
-        }
-        function openMovieModal(movieId) {
-            var overlay = document.getElementById('modalOverlay');
-            var body = document.getElementById('modalBody');
-            var movie = movieData[movieId];
-            if (!movie) { body.innerHTML = '<p style="text-align:center;padding:40px;color:#e94560;">Película no encontrada.</p>'; overlay.classList.add('active'); return; }
-            var genresHtml = '';
-            movie.genres.forEach(function(g) { genresHtml += '<span class="genre-tag">' + g.name + '</span>'; });
-            var ratingsHtml = '';
-            movie.ratings.forEach(function(r) {
-                var stars = '';
-                for (var i = 0; i < r.rating; i++) { stars += '&#9733;'; }
-                for (var i = r.rating; i < 10; i++) { stars += '&#9734;'; }
-                ratingsHtml += '<div class="rating-item"><div class="rating-item-header"><span class="rating-stars">' + stars + '</span><span class="rating-user">Usuario</span></div><div class="rating-comment">' + (r.comment || 'Sin comentario') + '</div></div>';
-            });
-            if (ratingsHtml === '') { ratingsHtml = '<p style="color:#a0aec0;">No hay valoraciones.</p>'; }
-            var avgStars = '';
-            for (var i = 0; i < Math.round(movie.avg_rating); i++) { avgStars += '&#9733;'; }
-            for (var i = Math.round(movie.avg_rating); i < 10; i++) { avgStars += '&#9734;'; }
-            var posterGrad = 'linear-gradient(135deg, #667eea, #764ba2)';
-            body.innerHTML = '<div class="modal-movie-header"><div class="modal-poster" style="background:' + posterGrad + ';">&#127916;</div><div class="modal-movie-info"><h2>' + movie.title + '</h2><div class="modal-meta"><span><strong>A&#241;o:</strong> ' + movie.release_year + '</span><span><strong>Duraci&#243;n:</strong> ' + movie.duration + '</span></div><div class="modal-genres">' + genresHtml + '</div><div class="modal-avg-rating"><span class="avg-stars">' + avgStars + '</span><span class="avg-text">' + movie.avg_rating + '/10 &middot; ' + movie.num_ratings + ' valoraciones</span></div></div></div><div class="modal-description">' + movie.description + '</div><div class="modal-ratings-section"><h3>Todas las Valoraciones</h3>' + ratingsHtml + '</div>';
-            overlay.classList.add('active');
-        }
-    </script>
 </body>
 </html>

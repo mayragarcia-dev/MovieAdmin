@@ -8,7 +8,12 @@
 {% endif %}
 
 <div class="filters">
-    <h3>Filtrar por género:</h3>
+    <h3>Buscar:</h3>
+    <form method="get" action="{% url 'recommendations' %}" style="display:inline-flex;align-items:center;gap:8px;">
+        <input type="text" name="q" placeholder="Buscar pel&iacute;cula..." value="{{ query|default:'' }}" style="padding:8px 16px;border:2px solid #e2e8f0;border-radius:25px;font-size:0.95em;outline:none;width:250px;transition:border-color 0.3s;" onfocus="this.style.borderColor='#0f3460'" onblur="this.style.borderColor='#e2e8f0'" />
+        <button type="submit" style="padding:8px 20px;background:#0f3460;color:#fff;border:none;border-radius:25px;cursor:pointer;font-size:0.95em;transition:all 0.3s;">Buscar</button>
+    </form>
+    <h3 style="margin-top:15px;">Filtrar por g&eacute;nero:</h3>
     <a href="{% url 'recommendations' %}" class="{% if not selected_genre %}active{% endif %}">Todos</a>
     {% for g in genres %}
     <a href="{% url 'recommendations' g.name %}" class="{% if selected_genre and selected_genre.name == g.name %}active{% endif %}">{{ g.name }}</a>
@@ -16,40 +21,61 @@
 </div>
 
 {% if movies %}
-<table>
-    <thead>
-        <tr>
-            <th>#</th>
-            <th>Título</th>
-            <th>Géneros</th>
-            <th>Año</th>
-            <th>Valoración Media</th>
-            <th>Mejor Nota</th>
-            <th>Valoraciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for item in movies %}
-        <tr>
-            <td>{{ forloop.counter }}</td>
-            <td><strong>{{ item.movie.title }}</strong></td>
-            <td>
+<div class="movies-grid">
+    {% for item in movies %}
+    <div class="movie-card" onclick="openMovieModal({{ item.movie.pk }})">
+        <div class="poster-placeholder" style="background: linear-gradient(135deg, {% cycle '0f3460' '1a1a2e' 'e94560' '0f3460' %}, {% cycle '1a1a2e' '0f3460' 'e94560' '1a1a2e' %});">
+            <span class="poster-icon">&#127916;</span>
+        </div>
+        <div class="card-body">
+            <h3 class="card-title">{{ item.movie.title }}</h3>
+            <div class="card-meta">
+                <span class="card-year">{{ item.movie.release_date|date:"Y" }}</span>
+                <span class="card-duration">{{ item.movie.duration }} min</span>
+            </div>
+            <div class="card-genres">
                 {% for g in item.movie.genres.all %}
                 <span class="genre-tag">{{ g.name }}</span>
                 {% endfor %}
-            </td>
-            <td>{{ item.movie.release_date|date:"Y" }}</td>
-            <td class="stars">{% for i in "**********"|make_list %}{% if forloop.counter <= item.avg_rating %}&#9733;{% else %}&#9734;{% endif %}{% endfor %} {{ item.avg_rating_num }}/10</td>
-            <td><strong style="color: #e94560;">{{ item.max_rating }}/10</strong></td>
-            <td>{{ item.num_ratings }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+            </div>
+            
+            <div class="card-hover-text">Ver detalles</div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
 {% else %}
 <div class="no-data">
-    <h3>No hay películas disponibles</h3>
-    <p>Aún no se han registrado películas con valoraciones.</p>
+    <h3>No hay pel&iacute;culas disponibles</h3>
+    <p>A&uacute;n no se han registrado pel&iacute;culas con valoraciones.</p>
 </div>
 {% endif %}
+
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal()">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+        <div id="modalBody">
+        </div>
+    </div>
+</div>
+<script>
+    var movieData = {};
+    {% for item in movies %}
+    movieData[{{ item.movie.pk }}] = {
+        pk: {{ item.movie.pk }},
+        title: "{{ item.movie.title|escapejs }}",
+        description: "{{ item.movie.description|escapejs }}",
+        release_year: "{{ item.movie.release_date|date:'Y' }}",
+        duration: "{{ item.movie.duration|escapejs }}",
+        genres: [
+            {% for g in item.movie.genres.all %}{"name": "{{ g.name|escapejs }}"}{% if not forloop.last %},{% endif %}{% endfor %}
+        ],
+        avg_rating: {{ item.avg_rating_num }},
+        num_ratings: {{ item.num_ratings }},
+        ratings: [
+            {% for r in item.movie.ratings.all %}{"rating": {{ r.rating }}, "comment": "{{ r.comment|default:'Sin comentario'|escapejs }}"}{% if not forloop.last %},{% endif %}{% endfor %}
+        ]
+    };
+    {% endfor %}
+</script>
 {% endblock %}

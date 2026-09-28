@@ -36,6 +36,166 @@
         .movie-title { font-weight: 600; color: #2d3748; }
         .avg-col { font-weight: 600; color: #0f3460; }
         .max-col { font-weight: 700; color: #e94560; }
+
+        /* ====== MOVIE CARDS ====== */
+        .movies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        .movie-card {
+            background: #fff;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .movie-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        }
+        .poster-placeholder {
+            width: 100%;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .poster-icon {
+            font-size: 4em;
+            opacity: 0.8;
+        }
+        .card-body {
+            padding: 20px;
+        }
+        .card-title {
+            font-size: 1.1em;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 8px;
+        }
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85em;
+            color: #718096;
+            margin-bottom: 10px;
+        }
+        .card-genres {
+            margin-bottom: 12px;
+        }
+        .card-rating {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9em;
+        }
+        .card-rating .stars { color: #f6ad55; letter-spacing: 2px; }
+        .card-rating .rating-text { font-weight: 700; color: #0f3460; }
+        .card-rating .rating-count { color: #a0aec0; }
+        .card-hover-text {
+            display: none;
+            text-align: center;
+            padding: 10px;
+            background: #0f3460;
+            color: #fff;
+            border-radius: 0 0 16px 16px;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+        .movie-card:hover .card-hover-text {
+            display: block;
+        }
+
+        /* ====== MODAL ====== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.3);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal-content {
+            background: #fff;
+            border-radius: 18px;
+            max-width: 720px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: modalSlideIn 0.3s ease;
+        }
+        @keyframes modalSlideIn {
+            from { transform: translateY(-30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .modal-close {
+            position: absolute;
+            top: 12px; right: 16px;
+            background: #e94560;
+            color: #fff;
+            border: none;
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            font-size: 1.3em;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.3s;
+        }
+        .modal-close:hover { background: #c73652; transform: scale(1.1); }
+        .modal-movie-header {
+            display: flex;
+            gap: 25px;
+            padding: 30px;
+            align-items: flex-start;
+        }
+        .modal-poster {
+            width: 120px; height: 170px;
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 3em; flex-shrink: 0;
+        }
+        .modal-movie-info h2 {
+            color: #1a1a2e; margin-bottom: 8px; font-size: 1.5em;
+        }
+        .modal-meta { margin-bottom: 10px; font-size: 0.9em; color: #718096; }
+        .modal-meta span { margin-right: 15px; }
+        .modal-genres { margin-bottom: 15px; }
+        .modal-description {
+            padding: 0 30px 20px;
+            color: #4a5568; line-height: 1.6;
+            font-size: 0.95em;
+            border-bottom: 1px solid #edf2f7;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+        .modal-ratings-section { padding: 0 30px 30px; }
+        .modal-ratings-section h3 {
+            color: #1a1a2e; margin-bottom: 12px; font-size: 1.1em;
+        }
+        .rating-item {
+            background: #f7fafc;
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin-bottom: 8px;
+        }
+        .rating-item-header {
+            display: flex; justify-content: space-between;
+            align-items: center; margin-bottom: 6px;
+        }
+        .rating-user { font-size: 0.85em; color: #0f3460; font-weight: 600; }
+        .rating-comment { color: #4a5568; font-size: 0.9em; }
     </style>
 </head>
 <body>
@@ -49,5 +209,28 @@
     <main>
         {% block content %}{% endblock %}
     </main>
+    <script>
+        function openMovieModal(movieId) {
+            var movie = movieData[movieId];
+            if (!movie) { alert('Película no encontrada'); return; }
+            var body = document.getElementById('modalBody');
+            var genresHtml = movie.genres.map(function(g) { return '<span class="genre-tag">' + g.name + '</span>'; }).join('');
+            var ratingsHtml = movie.ratings.map(function(r) {
+                var stars = '';
+                for (var i = 0; i < r.rating; i++) stars += '&#9733;';
+                for (var i = r.rating; i < 10; i++) stars += '&#9734;';
+                return '<div class="rating-item"><div class="rating-item-header"><span class="rating-stars">' + stars + '</span><span class="rating-user">Usuario</span></div><div class="rating-comment">' + (r.comment || 'Sin comentario') + '</div></div>';
+            }).join('');
+            if (!ratingsHtml) ratingsHtml = '<p>No hay valoraciones.</p>';
+            var avgStars = '';
+            for (var i = 0; i < Math.round(movie.avg_rating); i++) avgStars += '&#9733;';
+            for (var i = Math.round(movie.avg_rating); i < 10; i++) avgStars += '&#9734;';
+            body.innerHTML = '<div class="modal-movie-header"><div class="modal-poster">&#127916;</div><div class="modal-movie-info"><h2>' + movie.title + '</h2><div class="modal-meta"><span><strong>A&#241;o:</strong> ' + movie.release_year + '</span><span><strong>Duraci&#243;n:</strong> ' + movie.duration + ' min</span></div><div class="modal-genres">' + genresHtml + '</div><div class="modal-avg-rating"><span class="stars">' + avgStars + '</span> <strong>' + movie.avg_rating + '/10</strong> (' + movie.num_ratings + ' valoraciones)</div></div></div><div class="modal-description">' + movie.description + '</div><div class="modal-ratings-section"><h3>Todas las Valoraciones</h3>' + ratingsHtml + '</div>';
+            document.getElementById('modalOverlay').classList.add('active');
+        }
+        function closeModal() {
+            document.getElementById('modalOverlay').classList.remove('active');
+        }
+    </script>
 </body>
 </html>

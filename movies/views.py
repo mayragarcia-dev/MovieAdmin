@@ -10,6 +10,10 @@ def movie_recommendations(request, genre_slug=None):
         genre = get_object_or_404(Genre, name__iexact=genre_slug)
         movies = movies.filter(genres=genre)
 
+    query = request.GET.get('q', '')
+    if query:
+        movies = movies.filter(title__icontains=query)
+
     movies_with_avg = []
     for movie in movies:
         ratings = movie.ratings.all()
@@ -33,6 +37,7 @@ def movie_recommendations(request, genre_slug=None):
         'movies': movies_with_avg,
         'genres': all_genres,
         'selected_genre': genre,
+        'query': query,
     }
     return render(request, 'movies/recommendations.html', context)
 
